@@ -6,8 +6,12 @@ function DogBreedImages(props) {
 
     useEffect(() => {
         console.log('prop has changed.')
+        fetch_images()
+    }, [props.breed_id]);
+
+    const fetch_images = () => {
         setUrls([])
-        let search_api = 'https://api.thedogapi.com/v1/images/search?limit=4&breed_ids=' + props.breed_id;
+        let search_api = 'https://api.thedogapi.com/v1/images/search?random&limit=4&breed_ids=' + props.breed_id;
         fetch(search_api)
             .then(res => res.json())
             .then((data) => {
@@ -17,8 +21,11 @@ function DogBreedImages(props) {
                 }
             })
             .catch(console.log)
-    }, [props.breed_id]);
+    }
 
+    const refreshButtonHandler = () => {
+        fetch_images()
+    }
     return (
         <div style={props.breed_id.length > 0 ? {} : {display: 'none'}}>
             <ul>
@@ -26,6 +33,7 @@ function DogBreedImages(props) {
                     return <li><img src={item} width='10%'/></li>;
                 })}
             </ul>
+            <button type='button' onClick={refreshButtonHandler}>Refresh Images</button>
         </div>
     );
 }
